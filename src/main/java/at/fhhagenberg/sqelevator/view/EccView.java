@@ -2,10 +2,12 @@ package at.fhhagenberg.sqelevator.view;
 
 import at.fhhagenberg.sqelevator.constants.Constants;
 import at.fhhagenberg.sqelevator.controller.EccController;
+import at.fhhagenberg.sqelevator.interfaces.IEccObserver;
+import at.fhhagenberg.sqelevator.model.ApplicationState;
 
 import java.awt.*;
 
-public abstract class EccView {
+public abstract class EccView implements IEccObserver {
 
     protected EccController controller;
 
@@ -35,4 +37,5 @@ public abstract class EccView {
     }
 
     public abstract void addComponents(Frame windowFrame);
+
 }

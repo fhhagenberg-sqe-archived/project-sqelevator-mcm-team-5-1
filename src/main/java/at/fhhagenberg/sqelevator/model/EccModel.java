@@ -13,6 +13,7 @@ public abstract class EccModel implements IEccObservable {
 
     public EccModel() {
         observers = new Vector<>();
+        applicationState = new ApplicationState();
     }
 
     @Override
