@@ -42,6 +42,7 @@ public class EccController extends WindowAdapter implements ActionListener {
     @Override
     public void windowClosing(WindowEvent e) {
         super.windowClosing(e);
+        timer.stop();
         e.getWindow().dispose();
     }
 
