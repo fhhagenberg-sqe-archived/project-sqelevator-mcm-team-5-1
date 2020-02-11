@@ -7,4 +7,8 @@ public class Constants {
     public static final int DEFAULT_WINDOW_WIDTH = 800;
 
     public static final int DEFAULT_WINDOW_HEIGHT = 600;
+
+    public static final int UPDATE_RATE_MS = 60;
+
+    public static final String ACTION_COMMAND_TIMER = "TimerTick";
 }

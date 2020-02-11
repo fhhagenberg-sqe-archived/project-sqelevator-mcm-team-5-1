@@ -1,5 +1,7 @@
 package at.fhhagenberg.sqelevator.model;
 
+import java.util.ArrayList;
+
 public class Elevator {
 
     public int committedDirection;
@@ -17,6 +19,8 @@ public class Elevator {
     public int currentPassengerWeight;
 
     public int maxPassengerNumber;
+
+    public ArrayList<Integer> activeFloorButtons = new ArrayList<>();
 
     public String toString() {
         StringBuilder builder = new StringBuilder();

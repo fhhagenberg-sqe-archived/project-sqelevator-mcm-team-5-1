@@ -8,5 +8,13 @@ public class ApplicationState {
 
     public int selectedElevator = -1;
 
+    public int numberOfFloors;
+
+    public int floorHeight;
+
+    public ArrayList<Integer> buttonUpPressed = new ArrayList<>();
+
+    public ArrayList<Integer> buttonDownPressed = new ArrayList<>();
+
     public ArrayList<Elevator> elevators = new ArrayList<>();
 }
