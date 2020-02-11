@@ -4,17 +4,81 @@ import java.util.ArrayList;
 
 public class ApplicationState {
 
-    public int numberOfElevators = 0;
+    public ApplicationState() {
+        this.buttonUpPressed = new ArrayList<>();
+        this.buttonDownPressed = new ArrayList<>();
+        this.elevators = new ArrayList<>();
+    }
 
-    public int selectedElevator = -1;
+    private int numberOfElevators = 0;
 
-    public int numberOfFloors;
+    private int selectedElevator = -1;
 
-    public int floorHeight;
+    private int numberOfFloors;
 
-    public ArrayList<Integer> buttonUpPressed = new ArrayList<>();
+    private int floorHeight;
 
-    public ArrayList<Integer> buttonDownPressed = new ArrayList<>();
+    private ArrayList<Integer> buttonUpPressed;
 
-    public ArrayList<Elevator> elevators = new ArrayList<>();
+    private ArrayList<Integer> buttonDownPressed;
+
+    private ArrayList<Elevator> elevators;
+
+    // Generated
+
+    public int getNumberOfElevators() {
+        return numberOfElevators;
+    }
+
+    public void setNumberOfElevators(int numberOfElevators) {
+        this.numberOfElevators = numberOfElevators;
+    }
+
+    public int getSelectedElevator() {
+        return selectedElevator;
+    }
+
+    public void setSelectedElevator(int selectedElevator) {
+        this.selectedElevator = selectedElevator;
+    }
+
+    public int getNumberOfFloors() {
+        return numberOfFloors;
+    }
+
+    public void setNumberOfFloors(int numberOfFloors) {
+        this.numberOfFloors = numberOfFloors;
+    }
+
+    public int getFloorHeight() {
+        return floorHeight;
+    }
+
+    public void setFloorHeight(int floorHeight) {
+        this.floorHeight = floorHeight;
+    }
+
+    public ArrayList<Integer> getButtonUpPressed() {
+        return buttonUpPressed;
+    }
+
+    public void setButtonUpPressed(ArrayList<Integer> buttonUpPressed) {
+        this.buttonUpPressed = buttonUpPressed;
+    }
+
+    public ArrayList<Integer> getButtonDownPressed() {
+        return buttonDownPressed;
+    }
+
+    public void setButtonDownPressed(ArrayList<Integer> buttonDownPressed) {
+        this.buttonDownPressed = buttonDownPressed;
+    }
+
+    public ArrayList<Elevator> getElevators() {
+        return elevators;
+    }
+
+    public void setElevators(ArrayList<Elevator> elevators) {
+        this.elevators = elevators;
+    }
 }

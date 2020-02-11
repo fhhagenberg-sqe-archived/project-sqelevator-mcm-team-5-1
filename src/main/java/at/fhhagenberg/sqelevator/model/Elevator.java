@@ -4,27 +4,32 @@ import java.util.ArrayList;
 
 public class Elevator {
 
-    public boolean automatic = true;
+    public Elevator() {
+        this.automatic = true;
+        this.activeFloorButtons = new ArrayList<>();
+    }
 
-    public int committedDirection;
+    private boolean automatic;
 
-    public int currentTarget;
+    private int committedDirection;
 
-    public int currentAcceleration;
+    private int currentTarget;
 
-    public int doorStatus;
+    private int currentAcceleration;
 
-    public int currentFloor;
+    private int doorStatus;
 
-    public int currentHeightOverGround;
+    private int currentFloor;
 
-    public int currentSpeed;
+    private int currentHeightOverGround;
 
-    public int currentPassengerWeight;
+    private int currentSpeed;
 
-    public int maxPassengerNumber;
+    private int currentPassengerWeight;
 
-    public ArrayList<Integer> activeFloorButtons = new ArrayList<>();
+    private int maxPassengerNumber;
+
+    private ArrayList<Integer> activeFloorButtons;
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -44,5 +49,95 @@ public class Elevator {
         }
 
         return builder.toString();
+    }
+
+    // Generated code
+
+    public boolean isAutomatic() {
+        return automatic;
+    }
+
+    public void setAutomatic(boolean automatic) {
+        this.automatic = automatic;
+    }
+
+    public int getCommittedDirection() {
+        return committedDirection;
+    }
+
+    public void setCommittedDirection(int committedDirection) {
+        this.committedDirection = committedDirection;
+    }
+
+    public int getCurrentTarget() {
+        return currentTarget;
+    }
+
+    public void setCurrentTarget(int currentTarget) {
+        this.currentTarget = currentTarget;
+    }
+
+    public int getCurrentAcceleration() {
+        return currentAcceleration;
+    }
+
+    public void setCurrentAcceleration(int currentAcceleration) {
+        this.currentAcceleration = currentAcceleration;
+    }
+
+    public int getDoorStatus() {
+        return doorStatus;
+    }
+
+    public void setDoorStatus(int doorStatus) {
+        this.doorStatus = doorStatus;
+    }
+
+    public int getCurrentFloor() {
+        return currentFloor;
+    }
+
+    public void setCurrentFloor(int currentFloor) {
+        this.currentFloor = currentFloor;
+    }
+
+    public int getCurrentHeightOverGround() {
+        return currentHeightOverGround;
+    }
+
+    public void setCurrentHeightOverGround(int currentHeightOverGround) {
+        this.currentHeightOverGround = currentHeightOverGround;
+    }
+
+    public int getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    public void setCurrentSpeed(int currentSpeed) {
+        this.currentSpeed = currentSpeed;
+    }
+
+    public int getCurrentPassengerWeight() {
+        return currentPassengerWeight;
+    }
+
+    public void setCurrentPassengerWeight(int currentPassengerWeight) {
+        this.currentPassengerWeight = currentPassengerWeight;
+    }
+
+    public int getMaxPassengerNumber() {
+        return maxPassengerNumber;
+    }
+
+    public void setMaxPassengerNumber(int maxPassengerNumber) {
+        this.maxPassengerNumber = maxPassengerNumber;
+    }
+
+    public ArrayList<Integer> getActiveFloorButtons() {
+        return activeFloorButtons;
+    }
+
+    public void setActiveFloorButtons(ArrayList<Integer> activeFloorButtons) {
+        this.activeFloorButtons = activeFloorButtons;
     }
 }
