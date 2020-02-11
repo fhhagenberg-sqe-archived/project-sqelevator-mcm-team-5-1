@@ -14,7 +14,6 @@ public class OperatorView extends EccView {
         super(controller, width, height);
     }
 
-    public int numOfFloors;
     private Label payload;
     private Label speed;
     private Label doorStatus;
@@ -22,11 +21,9 @@ public class OperatorView extends EccView {
     private Label up;
     private Label down;
     private Label position;
-    private TextField inputPosition;
     private Choice floorSelect;
-    Panel callStopPanel;
-
-    private Panel floorPanel;
+    private Label downButtonPressed;
+    private Label upButtonPressed;
 
 
     @Override
@@ -46,8 +43,10 @@ public class OperatorView extends EccView {
         infoPanel.add(labelPayload, c);
 
         c.gridy = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        payload = new Label("_____");
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.EAST;
+        payload = new Label("12345");
+        payload.setBounds(100,100,100,100);
         infoPanel.add(payload, c);
 
         c.gridy = 2;
@@ -57,7 +56,7 @@ public class OperatorView extends EccView {
 
         c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
-        speed = new Label("_____");
+        speed = new Label("123");
         infoPanel.add(speed, c);
 
         c.gridy = 4;
@@ -125,12 +124,7 @@ public class OperatorView extends EccView {
         c.weightx = 1;
         floorSelect = new Choice();
         floorSelect.setSize(100, 75);
-        floorSelect.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                System.out.println(floorSelect.getSelectedIndex());
-            }
-        });
+        floorSelect.addItemListener(e -> System.out.println(floorSelect.getSelectedIndex()));
         floorSelect.setFont(new Font("Helvetica", Font.BOLD, 20));
         positionPanel.add(floorSelect, c);
         floorSelect.setVisible(false);
@@ -159,7 +153,7 @@ public class OperatorView extends EccView {
         c.fill = GridBagConstraints.HORIZONTAL;
         positionPanel.add(new Panel(), c);
 
-        floorPanel = new Panel();
+        Panel floorPanel = new Panel();
         floorPanel.setLayout(new GridBagLayout());
 
         Panel modePanel = new Panel(new GridLayout());
@@ -193,17 +187,32 @@ public class OperatorView extends EccView {
         floorPanel.add(modePanel, c);
         floorPanel.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
-        callStopPanel = new Panel();
+        Panel callStopPanel = new Panel();
         callStopPanel.setLayout(new GridBagLayout());
 
         c = new GridBagConstraints();
-        int gridWeight = 0;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.WEST;
+        Label labelCallStop = new Label("Call/Stop pressed on floor: ");
+        callStopPanel.add(labelCallStop, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        upButtonPressed = new Label("_________");
+        callStopPanel.add(upButtonPressed,c);
+        c.gridx = 0;
+        c.gridy = 2;
+        downButtonPressed = new Label("___________");
+        callStopPanel.add(downButtonPressed,c);
 
-        for (int i = numOfFloors; i >= 1; i--) {
-            c.gridy = gridWeight;
-            callStopPanel.add(new Label(), c);
-
-        }
+//        c = new GridBagConstraints();
+//        int gridWeight = 0;
+//
+//        for (int i = numOfFloors; i >= 1; i--) {
+//            c.gridy = gridWeight;
+//            callStopPanel.add(new Label(), c);
+//
+//        }
 
         callStopPanel.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
@@ -224,9 +233,7 @@ public class OperatorView extends EccView {
         System.out.println(applicationState.numberOfElevators);
 
         if (applicationState.numberOfElevators > 0) {
-            numOfFloors = applicationState.numberOfFloors;
-            ArrayList buttonDownList = applicationState.buttonDownPressed;
-            ArrayList buttonUpList = applicationState.buttonUpPressed;
+            int numOfFloors;
 
             if (floorSelect != null) {
                 if (floorSelect.getItemCount() == 0) {
@@ -238,36 +245,39 @@ public class OperatorView extends EccView {
                 doorStatus.setText(String.valueOf(applicationState.elevators.get(0).doorStatus));
                 speed.setText(String.valueOf(applicationState.elevators.get(0).currentSpeed));
                 payload.setText(String.valueOf(applicationState.elevators.get(0).currentPassengerWeight));
-                target.setText(String.valueOf(applicationState.elevators.get(0).committedDirection));
+                target.setText(String.valueOf(applicationState.elevators.get(0).committedDirection - 1));
                 position.setText(String.valueOf(applicationState.elevators.get(0).currentFloor));
+                upButtonPressed.setText("UP: " + String.valueOf(applicationState.buttonDownPressed));
+                downButtonPressed.setText("DOWN: " + String.valueOf(applicationState.buttonUpPressed));
 
-                GridBagConstraints c = new GridBagConstraints();
-                int gridWeight = 0;
 
-                for (int i = numOfFloors; i >= 1; i--) {
-                    c.gridx = 0;
-                    c.gridy = gridWeight;
-                    callStopPanel.add(new Label(String.valueOf(i)), c);
-                    c.gridx = 1;
-                    c.gridy = gridWeight;
-                    if(buttonUpList.contains(i-1)){
-                        callStopPanel.add(new Label("U:X"), c);
-                    }else {
-                        callStopPanel.add(new Label("U: "), c);
-                    }
-                    c.gridx = 2;
-                    c.gridy = gridWeight;
-                    if(buttonDownList.contains(i-1)){
-                        callStopPanel.add(new Label("D:X"), c);
-                    }else {
-                        callStopPanel.add(new Label("D: "), c);
-                    }
-//                    c.gridx = 3;
+//                GridBagConstraints c = new GridBagConstraints();
+//                int gridWeight = 0;
+//
+//                for (int i = numOfFloors; i >= 1; i--) {
+//                    c.gridx = 0;
 //                    c.gridy = gridWeight;
-//                    callStopPanel.add(new Label("P: "), c);
-
-                    gridWeight++;
-                }
+//                    callStopPanel.add(new Label(String.valueOf(i)), c);
+//                    c.gridx = 1;
+//                    c.gridy = gridWeight;
+//                    if (buttonUpList.contains(i - 1)) {
+//                        callStopPanel.add(new Label("U:X"), c);
+//                    } else {
+//                        callStopPanel.add(new Label("U: "), c);
+//                    }
+//                    c.gridx = 2;
+//                    c.gridy = gridWeight;
+//                    if (buttonDownList.contains(i - 1)) {
+//                        callStopPanel.add(new Label("D:X"), c);
+//                    } else {
+//                        callStopPanel.add(new Label("D: "), c);
+//                    }
+////                    c.gridx = 3;
+////                    c.gridy = gridWeight;
+////                    callStopPanel.add(new Label("P: "), c);
+//
+//                    gridWeight++;
+//                }
             }
             System.out.println(applicationState.elevators.get(0).toString());
         }
