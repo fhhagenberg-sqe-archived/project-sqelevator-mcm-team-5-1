@@ -5,6 +5,10 @@ import at.fhhagenberg.sqelevator.model.ApplicationState;
 
 import java.awt.*;
 
+/**
+ * The OperatorView represents the visualization of the data the model contains.
+ * Gives information about current elevator cabin status and pressed Call/Stop buttons.
+ */
 public class OperatorView extends EccView {
 
     public OperatorView(EccController controller, int width, int height) {
@@ -33,6 +37,11 @@ public class OperatorView extends EccView {
     private int elevatorIndex;
     private int floorIndex;
 
+    /**
+     * Adds UI elements to the provided frame and initializes them.
+     *
+     * @param windowFrame The frame object to which components can be added.
+     */
     @Override
     public void addComponents(Frame windowFrame) {
         windowFrame.setLayout(new GridLayout(1, 3));
@@ -260,6 +269,11 @@ public class OperatorView extends EccView {
         windowFrame.add(floorPanel);
     }
 
+    /**
+     * applicationStateChanged method is called periodically to update the current information to display
+     *
+     * @param applicationState The updated application state.
+     */
     @Override
     public void applicationStateChanged(ApplicationState applicationState) {
         elevatorIndex = applicationState.getSelectedElevator();
