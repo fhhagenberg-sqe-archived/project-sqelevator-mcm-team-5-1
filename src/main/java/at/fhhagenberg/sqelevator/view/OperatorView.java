@@ -4,8 +4,6 @@ import at.fhhagenberg.sqelevator.controller.EccController;
 import at.fhhagenberg.sqelevator.model.ApplicationState;
 
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 public class OperatorView extends EccView {
@@ -22,8 +20,10 @@ public class OperatorView extends EccView {
     private Label down;
     private Label position;
     private Choice floorSelect;
-    private Label downButtonPressed;
-    private Label upButtonPressed;
+    private Label buttonDownPressed;
+    private Label buttonUpPressed;
+    private Label elevatorPanelButtonsPressed;
+    private Panel infoPanel;
 
 
     @Override
@@ -31,7 +31,7 @@ public class OperatorView extends EccView {
         windowFrame.setLayout(new GridLayout(1, 3));
         windowFrame.setBackground(Color.lightGray);
 
-        Panel infoPanel = new Panel();
+        infoPanel = new Panel();
         infoPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
@@ -43,11 +43,10 @@ public class OperatorView extends EccView {
         infoPanel.add(labelPayload, c);
 
         c.gridy = 1;
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.EAST;
+        c.anchor = GridBagConstraints.CENTER;
         payload = new Label("12345");
-        payload.setBounds(100,100,100,100);
         infoPanel.add(payload, c);
+
 
         c.gridy = 2;
         c.anchor = GridBagConstraints.WEST;
@@ -198,12 +197,20 @@ public class OperatorView extends EccView {
         callStopPanel.add(labelCallStop, c);
         c.gridx = 0;
         c.gridy = 1;
-        upButtonPressed = new Label("_________");
-        callStopPanel.add(upButtonPressed,c);
+        buttonUpPressed = new Label("_________");
+        callStopPanel.add(buttonUpPressed,c);
         c.gridx = 0;
         c.gridy = 2;
-        downButtonPressed = new Label("___________");
-        callStopPanel.add(downButtonPressed,c);
+        buttonDownPressed = new Label("_________");
+        callStopPanel.add(buttonDownPressed,c);
+        c.gridx = 0;
+        c.gridy = 3;
+        Label labelElevatorPanel = new Label("Pressed on Elevator panel:");
+        callStopPanel.add(labelElevatorPanel,c);
+        c.gridx = 0;
+        c.gridy = 4;
+        elevatorPanelButtonsPressed = new Label("_________");
+        callStopPanel.add(elevatorPanelButtonsPressed,c);
 
 //        c = new GridBagConstraints();
 //        int gridWeight = 0;
@@ -234,21 +241,35 @@ public class OperatorView extends EccView {
 
         if (applicationState.numberOfElevators > 0) {
             int numOfFloors;
+            ArrayList buttonUp = applicationState.buttonUpPressed;
+            ArrayList buttonDown = applicationState.buttonDownPressed;
 
-            if (floorSelect != null) {
+            if (infoPanel != null) {
                 if (floorSelect.getItemCount() == 0) {
                     numOfFloors = applicationState.numberOfFloors;
                     for (int i = 1; i <= numOfFloors; i++) {
                         floorSelect.add(String.valueOf(i));
                     }
                 }
+
+                StringBuilder builder = new StringBuilder();
+                for (int i =0;i < buttonDown.size();i++){
+                    builder.append((int)buttonDown.get(0));
+                    builder.append(" ");
+                }
+
                 doorStatus.setText(String.valueOf(applicationState.elevators.get(0).doorStatus));
                 speed.setText(String.valueOf(applicationState.elevators.get(0).currentSpeed));
                 payload.setText(String.valueOf(applicationState.elevators.get(0).currentPassengerWeight));
-                target.setText(String.valueOf(applicationState.elevators.get(0).committedDirection - 1));
+                payload.setSize(100,50);
+                target.setText(String.valueOf(applicationState.elevators.get(0).currentTarget));
                 position.setText(String.valueOf(applicationState.elevators.get(0).currentFloor));
-                upButtonPressed.setText("UP: " + String.valueOf(applicationState.buttonDownPressed));
-                downButtonPressed.setText("DOWN: " + String.valueOf(applicationState.buttonUpPressed));
+                buttonUpPressed.setText("UP: " + String.valueOf(applicationState.buttonUpPressed));
+                buttonUpPressed.setSize(500,35);
+                buttonDownPressed.setText("DOWN: " + String.valueOf(applicationState.buttonDownPressed));
+                buttonDownPressed.setSize(500,35);
+                elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(0).activeFloorButtons));
+                elevatorPanelButtonsPressed.setSize(500,35);
 
 
 //                GridBagConstraints c = new GridBagConstraints();
