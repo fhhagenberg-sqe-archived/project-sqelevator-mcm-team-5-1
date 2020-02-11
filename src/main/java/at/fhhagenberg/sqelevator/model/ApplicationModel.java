@@ -28,6 +28,10 @@ public class ApplicationModel extends EccModel {
             for (int i = 0; i < applicationState.numberOfElevators; i++) {
                 applicationState.elevators.add(new Elevator());
             }
+
+            if (applicationState.numberOfElevators > 0) {
+                applicationState.selectedElevator = 0;
+            }
         } catch (Exception e) {
             // TODO: Handle exception
             e.printStackTrace();
@@ -58,6 +62,17 @@ public class ApplicationModel extends EccModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setSelectedElevator(int elevatorIndex) {
+        if (elevatorIndex >= 0 && elevatorIndex < applicationState.numberOfElevators) {
+            applicationState.selectedElevator = elevatorIndex;
+        }
+    }
+
+    public void setElevatorAutomaticMode(int elevatorIndex, boolean automatic) {
+        Elevator elevator = applicationState.elevators.get(elevatorIndex);
+        elevator.automatic = automatic;
     }
 
     public void setManualElevatorTarget(int elevatorIndex, int target) throws RemoteException {
