@@ -4,38 +4,52 @@ import at.fhhagenberg.sqelevator.controller.EccController;
 import at.fhhagenberg.sqelevator.model.ApplicationState;
 
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
+/**
+ * The OperatorView represents the visualization of the data the model contains.
+ * Gives information about current elevator cabin status and pressed Call/Stop buttons.
+ */
 public class OperatorView extends EccView {
 
     public OperatorView(EccController controller, int width, int height) {
         super(controller, width, height);
     }
 
+    private Panel infoPanel;
+
     private Label payload;
     private Label speed;
     private Label doorStatus;
     private Label target;
-    private Label up;
-    private Label down;
-    private Label position;
-    private Choice floorSelect;
-    private Choice selectedElevator;
-    private Label buttonDownPressed;
-    private Label buttonUpPressed;
+    private Label directionUp;
+    private Label directionDown;
+    private Label currentPosition;
+    private Label downButtonsPressed;
+    private Label UpButtonsPressed;
     private Label elevatorPanelButtonsPressed;
-    private Panel infoPanel;
-    private Checkbox checkBox1;
-    private Checkbox checkBox2;
+
+    private Choice floorSelection;
+    private Choice elevatorSelection;
+
+    private Checkbox checkBoxAuto;
+    private Checkbox checkBoxManual;
+
     private int elevatorIndex;
     private int floorIndex;
 
+    /**
+     * Adds UI elements to the provided frame and initializes them.
+     *
+     * @param windowFrame The frame object to which components can be added.
+     */
     @Override
     public void addComponents(Frame windowFrame) {
         windowFrame.setLayout(new GridLayout(1, 3));
         windowFrame.setBackground(Color.lightGray);
 
+        //******************************************************************************************************
+        //Info panel to select elevator and to display relevant information about currently selected elevator
+        //******************************************************************************************************
         infoPanel = new Panel();
         infoPanel.setLayout(new GridBagLayout());
 
@@ -44,14 +58,14 @@ public class OperatorView extends EccView {
         c.gridy = 0;
         c.anchor = GridBagConstraints.WEST;
         c.weightx = 1;
-        selectedElevator = new Choice();
-        selectedElevator.setSize(50, 75);
-        selectedElevator.addItemListener(e -> {
-            controller.setSelectedElevator(selectedElevator.getSelectedIndex());
-            floorSelect.select(floorIndex);
+        elevatorSelection = new Choice();
+        elevatorSelection.setSize(50, 75);
+        elevatorSelection.addItemListener(e -> {
+            controller.setSelectedElevator(elevatorSelection.getSelectedIndex());
+            floorSelection.select(floorIndex);
         });
-        infoPanel.add(selectedElevator, c);
-        selectedElevator.setVisible(false);
+        infoPanel.add(elevatorSelection, c);
+        elevatorSelection.setVisible(false);
 
         c.gridx = 0;
         c.gridy = 1;
@@ -98,6 +112,9 @@ public class OperatorView extends EccView {
         Font myFont = new Font("Helvetica", Font.PLAIN, 30);
         infoPanel.setFont(myFont);
 
+        //******************************************************************************************************
+        //Position panel to display current floor and direction which the elevator is going
+        //******************************************************************************************************
         Panel positionPanel = new Panel();
         positionPanel.setLayout(new GridBagLayout());
 
@@ -113,9 +130,9 @@ public class OperatorView extends EccView {
         c.gridy = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        up = new Label("UP");
-        up.setFont(new Font("Helvetica", Font.BOLD, 45));
-        positionPanel.add(up, c);
+        directionUp = new Label("UP");
+        directionUp.setFont(new Font("Helvetica", Font.BOLD, 45));
+        positionPanel.add(directionUp, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -129,20 +146,20 @@ public class OperatorView extends EccView {
         c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        position = new Label("PO");
-        position.setFont(new Font("Helvetica", Font.BOLD, 35));
-        positionPanel.add(position, c);
+        currentPosition = new Label("PO");
+        currentPosition.setFont(new Font("Helvetica", Font.BOLD, 35));
+        positionPanel.add(currentPosition, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        floorSelect = new Choice();
-        floorSelect.setSize(50, 75);
-        floorSelect.addItemListener(e -> controller.setSelectedFloor(elevatorIndex, floorSelect.getSelectedIndex()));
-        floorSelect.setFont(new Font("Helvetica", Font.BOLD, 20));
-        positionPanel.add(floorSelect, c);
+        floorSelection = new Choice();
+        floorSelection.setSize(50, 75);
+        floorSelection.addItemListener(e -> controller.setSelectedFloor(elevatorIndex, floorSelection.getSelectedIndex()));
+        floorSelection.setFont(new Font("Helvetica", Font.BOLD, 20));
+        positionPanel.add(floorSelection, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -156,9 +173,9 @@ public class OperatorView extends EccView {
         c.gridy = 5;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        down = new Label("DOWN");
-        down.setFont(new Font("Helvetica", Font.BOLD, 45));
-        positionPanel.add(down, c);
+        directionDown = new Label("DOWN");
+        directionDown.setFont(new Font("Helvetica", Font.BOLD, 45));
+        positionPanel.add(directionDown, c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -167,32 +184,34 @@ public class OperatorView extends EccView {
         c.fill = GridBagConstraints.HORIZONTAL;
         positionPanel.add(new Panel(), c);
 
+
+        //******************************************************************************************************
+        // Floor panel for mode selection, to display on which floor UP and DOWN buttons are pressed and which
+        // are pressed on the panel inside the elevator
+        //******************************************************************************************************
         Panel floorPanel = new Panel();
         floorPanel.setLayout(new GridBagLayout());
 
+        //Upper Panel for mode selection
         Panel modePanel = new Panel(new GridLayout());
 
         CheckboxGroup cbg = new CheckboxGroup();
-        checkBox1 = new Checkbox("Aut", cbg, true);
-        checkBox1.setBounds(100, 100, 50, 50);
-        checkBox2 = new Checkbox("Man", cbg, false);
-        checkBox2.setBounds(100, 150, 50, 50);
+        checkBoxAuto = new Checkbox("Aut", cbg, true);
+        checkBoxAuto.setBounds(100, 100, 50, 50);
+        checkBoxManual = new Checkbox("Man", cbg, false);
+        checkBoxManual.setBounds(100, 150, 50, 50);
 
-        checkBox1.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                controller.setAutomaticMode(elevatorIndex, true);
-                floorSelect.select(floorIndex);
-            }
+        checkBoxAuto.addItemListener(e -> {
+            controller.setAutomaticMode(elevatorIndex, true);
+            floorSelection.select(floorIndex);
         });
-        checkBox2.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                controller.setAutomaticMode(elevatorIndex, false);
-                floorSelect.select(floorIndex);
-            }
+        checkBoxManual.addItemListener(e -> {
+            controller.setAutomaticMode(elevatorIndex, false);
+            floorSelection.select(floorIndex);
         });
 
-        checkBox1.setEnabled(false);
-        checkBox2.setEnabled(false);
+        checkBoxAuto.setEnabled(false);
+        checkBoxManual.setEnabled(false);
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -202,12 +221,13 @@ public class OperatorView extends EccView {
         Label labelMode = new Label("Mode:");
         modePanel.add(labelMode);
 
-        modePanel.add(checkBox1);
-        modePanel.add(checkBox2);
+        modePanel.add(checkBoxAuto);
+        modePanel.add(checkBoxManual);
 
         floorPanel.add(modePanel, c);
         floorPanel.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
+        // Second panel for pressed button information
         Panel callStopPanel = new Panel();
         callStopPanel.setLayout(new GridBagLayout());
 
@@ -219,12 +239,12 @@ public class OperatorView extends EccView {
         callStopPanel.add(labelCallStop, c);
         c.gridx = 0;
         c.gridy = 1;
-        buttonUpPressed = new Label("");
-        callStopPanel.add(buttonUpPressed, c);
+        UpButtonsPressed = new Label("");
+        callStopPanel.add(UpButtonsPressed, c);
         c.gridx = 0;
         c.gridy = 2;
-        buttonDownPressed = new Label("");
-        callStopPanel.add(buttonDownPressed, c);
+        downButtonsPressed = new Label("");
+        callStopPanel.add(downButtonsPressed, c);
         c.gridx = 0;
         c.gridy = 3;
         Label labelElevatorPanel = new Label("Pressed on Elevator panel:");
@@ -243,84 +263,91 @@ public class OperatorView extends EccView {
         c.fill = GridBagConstraints.HORIZONTAL;
         floorPanel.add(callStopPanel, c);
 
+        //Add all panels to Frame
         windowFrame.add(infoPanel);
         windowFrame.add(positionPanel);
         windowFrame.add(floorPanel);
     }
 
+    /**
+     * applicationStateChanged method is called periodically to update the current information to display
+     *
+     * @param applicationState The updated application state.
+     */
     @Override
     public void applicationStateChanged(ApplicationState applicationState) {
-        elevatorIndex = applicationState.selectedElevator;
-        floorIndex = applicationState.elevators.get(elevatorIndex).currentFloor;
+        elevatorIndex = applicationState.getSelectedElevator();
+        floorIndex = applicationState.getElevators().get(elevatorIndex).getCurrentFloor();
 
-
-        if (applicationState.numberOfElevators > 0) {
-            if (infoPanel != null) {
-                floorSelect.setSize(50, 75);
-                checkBox1.setEnabled(true);
-                checkBox2.setEnabled(true);
-                if (applicationState.elevators.get(elevatorIndex).automatic) {
-                    checkBox1.setState(true);
-                    checkBox2.setState(false);
-                    floorSelect.setVisible(false);
-                    position.setVisible(true);
+        if (applicationState.getNumberOfElevators() > 0) {
+            if (infoPanel != null) { // wait until UI elements are available
+                floorSelection.setSize(50, 75);
+                checkBoxAuto.setEnabled(true);
+                checkBoxManual.setEnabled(true);
+                if (applicationState.getElevators().get(elevatorIndex).isAutomatic()) {
+                    checkBoxAuto.setState(true);
+                    checkBoxManual.setState(false);
+                    floorSelection.setVisible(false);
+                    currentPosition.setVisible(true);
                 } else {
-                    checkBox1.setState(false);
-                    checkBox2.setState(true);
-                    floorSelect.setVisible(true);
-                    position.setVisible(false);
+                    checkBoxAuto.setState(false);
+                    checkBoxManual.setState(true);
+                    floorSelection.setVisible(true);
+                    currentPosition.setVisible(false);
                 }
-                if (applicationState.numberOfElevators == 1) {
-                    selectedElevator.setVisible(false);
+                if (applicationState.getNumberOfElevators() == 1) {
+                    elevatorSelection.setVisible(false);
                 } else {
-                    selectedElevator.setVisible(true);
-                    if (selectedElevator.getItemCount() == 0) {
-                        for (int i = 0; i < applicationState.numberOfElevators; i++) {
-                            selectedElevator.add(String.valueOf(i));
+                    elevatorSelection.setVisible(true);
+                    if (elevatorSelection.getItemCount() == 0) {
+                        for (int i = 0; i < applicationState.getNumberOfElevators(); i++) {
+                            elevatorSelection.add(String.valueOf(i));
                         }
                     }
                 }
-                if (floorSelect.getItemCount() == 0) {
-                    for (int i = 0; i < applicationState.numberOfFloors; i++) {
-                        floorSelect.add(String.valueOf(i));
+                if (floorSelection.getItemCount() == 0) {
+                    for (int i = 0; i < applicationState.getNumberOfFloors(); i++) {
+                        floorSelection.add(String.valueOf(i));
                     }
 
                 }
 
-                selectedElevator.setSize(50, 50);
+                //set all information
+                doorStatus.setText(String.valueOf(applicationState.getElevators().get(elevatorIndex).getDoorStatus()));
+                speed.setText(String.valueOf(applicationState.getElevators().get(elevatorIndex).getCurrentSpeed()));
+                payload.setText(String.valueOf(applicationState.getElevators().get(elevatorIndex).getCurrentPassengerWeight()));
+                target.setText(String.valueOf(applicationState.getElevators().get(elevatorIndex).getCurrentTarget()));
+                currentPosition.setText(String.valueOf(applicationState.getElevators().get(elevatorIndex).getCurrentFloor()));
+                UpButtonsPressed.setText("UP: " + String.valueOf(applicationState.getButtonUpPressed()));
+                downButtonsPressed.setText("DOWN: " + String.valueOf(applicationState.getButtonDownPressed()));
+                elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.getElevators().get(elevatorIndex).getActiveFloorButtons()));
 
-                doorStatus.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).doorStatus));
-                speed.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentSpeed));
-                payload.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentPassengerWeight));
+                //set sizes of elements
+                elevatorSelection.setSize(50, 50);
                 payload.setSize(100, 35);
-                target.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentTarget));
                 target.setSize(100, 35);
-                position.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentFloor));
-                position.setSize(100, 35);
-                buttonUpPressed.setText("UP: " + String.valueOf(applicationState.buttonUpPressed));
-                buttonUpPressed.setSize(500, 35);
-                buttonDownPressed.setText("DOWN: " + String.valueOf(applicationState.buttonDownPressed));
-                buttonDownPressed.setSize(500, 35);
-                elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(elevatorIndex).activeFloorButtons));
+                currentPosition.setSize(100, 35);
+                UpButtonsPressed.setSize(500, 35);
+                downButtonsPressed.setSize(500, 35);
                 elevatorPanelButtonsPressed.setSize(500, 35);
-                switch (applicationState.elevators.get(elevatorIndex).committedDirection) {
+
+                //display elevator direction
+                switch (applicationState.getElevators().get(elevatorIndex).getCommittedDirection()) {
                     case 0:
-                        down.setBackground(Color.lightGray);
-                        up.setBackground(Color.GREEN);
+                        directionDown.setBackground(Color.lightGray);
+                        directionUp.setBackground(Color.GREEN);
                         break;
                     case 1:
-                        down.setBackground(Color.GREEN);
-                        up.setBackground(Color.lightGray);
+                        directionDown.setBackground(Color.GREEN);
+                        directionUp.setBackground(Color.lightGray);
                         break;
                     case 2:
-                        down.setBackground(Color.lightGray);
-                        up.setBackground(Color.LIGHT_GRAY);
+                        directionDown.setBackground(Color.lightGray);
+                        directionUp.setBackground(Color.LIGHT_GRAY);
                         break;
                     default:
                 }
             }
-        } else {
-            selectedElevator.setVisible(false);
         }
     }
 }
