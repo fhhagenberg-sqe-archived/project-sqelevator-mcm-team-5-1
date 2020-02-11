@@ -76,6 +76,10 @@ public class ApplicationModel extends EccModel {
     }
 
     public void setElevatorAutomaticMode(int elevatorIndex, boolean automatic) {
+        if (elevatorIndex < 0 || elevatorIndex >= applicationState.numberOfElevators) {
+            // not a valid index
+            return;
+        }
         Elevator elevator = applicationState.elevators.get(elevatorIndex);
         elevator.automatic = automatic;
         notifyObservers(applicationState);
