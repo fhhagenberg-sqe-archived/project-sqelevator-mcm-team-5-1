@@ -195,6 +195,9 @@ public class OperatorView extends EccView {
             }
         });
 
+        checkBox1.setEnabled(false);
+        checkBox2.setEnabled(false);
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -259,6 +262,8 @@ public class OperatorView extends EccView {
         if (applicationState.numberOfElevators > 0) {
             if (infoPanel != null) {
                 floorSelect.setSize(50, 75);
+                checkBox1.setEnabled(true);
+                checkBox2.setEnabled(true);
                 if (applicationState.elevators.get(elevatorIndex).automatic) {
                     checkBox1.setState(true);
                     checkBox2.setState(false);
