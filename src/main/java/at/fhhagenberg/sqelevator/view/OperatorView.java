@@ -63,7 +63,6 @@ public class OperatorView extends EccView {
         c.gridy = 2;
         c.anchor = GridBagConstraints.CENTER;
         payload = new Label("____");
-//        payload.setSize(100, 50);
         infoPanel.add(payload, c);
 
         c.gridy = 3;
@@ -74,7 +73,6 @@ public class OperatorView extends EccView {
         c.gridy = 4;
         c.anchor = GridBagConstraints.CENTER;
         speed = new Label("__");
-//        speed.setSize(100, 50);
         infoPanel.add(speed, c);
 
         c.gridy = 5;
@@ -85,7 +83,6 @@ public class OperatorView extends EccView {
         c.gridy = 6;
         c.anchor = GridBagConstraints.CENTER;
         doorStatus = new Label("__");
-//        doorStatus.setSize(100, 50);
         infoPanel.add(doorStatus, c);
 
         c.gridy = 7;
@@ -96,7 +93,6 @@ public class OperatorView extends EccView {
         c.gridy = 8;
         c.anchor = GridBagConstraints.CENTER;
         target = new Label("__");
-//        target.setSize(100, 50);
         infoPanel.add(target, c);
 
         Font myFont = new Font("Helvetica", Font.PLAIN, 30);
@@ -254,7 +250,6 @@ public class OperatorView extends EccView {
 
     @Override
     public void applicationStateChanged(ApplicationState applicationState) {
-//        System.out.println(applicationState.numberOfElevators);
         elevatorIndex = applicationState.selectedElevator;
         floorIndex = applicationState.elevators.get(elevatorIndex).currentFloor;
 
@@ -308,7 +303,6 @@ public class OperatorView extends EccView {
                 buttonDownPressed.setSize(500, 35);
                 elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(elevatorIndex).activeFloorButtons));
                 elevatorPanelButtonsPressed.setSize(500, 35);
-//                System.out.println(applicationState.elevators.get(elevatorIndex).committedDirection);
                 switch (applicationState.elevators.get(elevatorIndex).committedDirection) {
                     case 0:
                         down.setBackground(Color.lightGray);
@@ -325,7 +319,6 @@ public class OperatorView extends EccView {
                     default:
                 }
             }
-//            System.out.println(applicationState.elevators.get(elevatorIndex).toString());
         } else {
             selectedElevator.setVisible(false);
         }
