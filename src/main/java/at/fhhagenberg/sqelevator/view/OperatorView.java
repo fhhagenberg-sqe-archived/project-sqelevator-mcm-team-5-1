@@ -4,7 +4,6 @@ import at.fhhagenberg.sqelevator.controller.EccController;
 import at.fhhagenberg.sqelevator.model.ApplicationState;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class OperatorView extends EccView {
 
@@ -24,8 +23,8 @@ public class OperatorView extends EccView {
     private Label buttonUpPressed;
     private Label elevatorPanelButtonsPressed;
     private Panel infoPanel;
-    Checkbox checkBox1;
-    Checkbox checkBox2;
+    private Checkbox checkBox1;
+    private Checkbox checkBox2;
 
 
     @Override
@@ -67,7 +66,7 @@ public class OperatorView extends EccView {
 
         c.gridy = 5;
         c.anchor = GridBagConstraints.CENTER;
-        doorStatus = new Label("_____");
+        doorStatus = new Label("");
         infoPanel.add(doorStatus, c);
 
         c.gridy = 6;
@@ -77,7 +76,7 @@ public class OperatorView extends EccView {
 
         c.gridy = 7;
         c.anchor = GridBagConstraints.CENTER;
-        target = new Label("_____");
+        target = new Label("");
         infoPanel.add(target, c);
 
         Font myFont = new Font("Helvetica", Font.PLAIN, 30);
@@ -128,8 +127,6 @@ public class OperatorView extends EccView {
         floorSelect.addItemListener(e -> System.out.println(floorSelect.getSelectedIndex()));
         floorSelect.setFont(new Font("Helvetica", Font.BOLD, 20));
         positionPanel.add(floorSelect, c);
-//        floorSelect.setVisible(false);
-
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -165,15 +162,6 @@ public class OperatorView extends EccView {
         checkBox2 = new Checkbox("Man", cbg, false);
         checkBox2.setBounds(100, 150, 50, 50);
 
-//        checkBox1.addItemListener(e -> {
-//            floorSelect.setVisible(false);
-//            position.setVisible(true);
-//        });
-//        checkBox2.addItemListener(e -> {
-//            position.setVisible(false);
-//            floorSelect.setVisible(true);
-//        });
-
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -199,11 +187,11 @@ public class OperatorView extends EccView {
         callStopPanel.add(labelCallStop, c);
         c.gridx = 0;
         c.gridy = 1;
-        buttonUpPressed = new Label("_________");
+        buttonUpPressed = new Label("");
         callStopPanel.add(buttonUpPressed, c);
         c.gridx = 0;
         c.gridy = 2;
-        buttonDownPressed = new Label("_________");
+        buttonDownPressed = new Label("");
         callStopPanel.add(buttonDownPressed, c);
         c.gridx = 0;
         c.gridy = 3;
@@ -211,17 +199,8 @@ public class OperatorView extends EccView {
         callStopPanel.add(labelElevatorPanel, c);
         c.gridx = 0;
         c.gridy = 4;
-        elevatorPanelButtonsPressed = new Label("_________");
+        elevatorPanelButtonsPressed = new Label("");
         callStopPanel.add(elevatorPanelButtonsPressed, c);
-
-//        c = new GridBagConstraints();
-//        int gridWeight = 0;
-//
-//        for (int i = numOfFloors; i >= 1; i--) {
-//            c.gridy = gridWeight;
-//            callStopPanel.add(new Label(), c);
-//
-//        }
 
         callStopPanel.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
@@ -239,12 +218,10 @@ public class OperatorView extends EccView {
 
     @Override
     public void applicationStateChanged(ApplicationState applicationState) {
-        System.out.println(applicationState.numberOfElevators);
+//        System.out.println(applicationState.numberOfElevators);
 
         if (applicationState.numberOfElevators > 0) {
             int numOfFloors;
-            ArrayList buttonUp = applicationState.buttonUpPressed;
-            ArrayList buttonDown = applicationState.buttonDownPressed;
             if (infoPanel != null) {
                 floorSelect.setSize(50, 75);
                 if (checkBox1.getState()) {
@@ -261,12 +238,6 @@ public class OperatorView extends EccView {
                     }
                 }
 
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < buttonDown.size(); i++) {
-                    builder.append((int) buttonDown.get(0));
-                    builder.append(" ");
-                }
-
                 doorStatus.setText(String.valueOf(applicationState.elevators.get(0).doorStatus));
                 speed.setText(String.valueOf(applicationState.elevators.get(0).currentSpeed));
                 payload.setText(String.valueOf(applicationState.elevators.get(0).currentPassengerWeight));
@@ -279,37 +250,8 @@ public class OperatorView extends EccView {
                 buttonDownPressed.setSize(500, 35);
                 elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(0).activeFloorButtons));
                 elevatorPanelButtonsPressed.setSize(500, 35);
-
-
-//                GridBagConstraints c = new GridBagConstraints();
-//                int gridWeight = 0;
-//
-//                for (int i = numOfFloors; i >= 1; i--) {
-//                    c.gridx = 0;
-//                    c.gridy = gridWeight;
-//                    callStopPanel.add(new Label(String.valueOf(i)), c);
-//                    c.gridx = 1;
-//                    c.gridy = gridWeight;
-//                    if (buttonUpList.contains(i - 1)) {
-//                        callStopPanel.add(new Label("U:X"), c);
-//                    } else {
-//                        callStopPanel.add(new Label("U: "), c);
-//                    }
-//                    c.gridx = 2;
-//                    c.gridy = gridWeight;
-//                    if (buttonDownList.contains(i - 1)) {
-//                        callStopPanel.add(new Label("D:X"), c);
-//                    } else {
-//                        callStopPanel.add(new Label("D: "), c);
-//                    }
-////                    c.gridx = 3;
-////                    c.gridy = gridWeight;
-////                    callStopPanel.add(new Label("P: "), c);
-//
-//                    gridWeight++;
-//                }
             }
-            System.out.println(applicationState.elevators.get(0).toString());
+//            System.out.println(applicationState.elevators.get(0).toString());
         }
     }
 }
