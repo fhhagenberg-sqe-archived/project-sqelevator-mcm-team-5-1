@@ -24,6 +24,8 @@ public class OperatorView extends EccView {
     private Label buttonUpPressed;
     private Label elevatorPanelButtonsPressed;
     private Panel infoPanel;
+    Checkbox checkBox1;
+    Checkbox checkBox2;
 
 
     @Override
@@ -122,11 +124,11 @@ public class OperatorView extends EccView {
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
         floorSelect = new Choice();
-        floorSelect.setSize(100, 75);
+        floorSelect.setSize(50, 75);
         floorSelect.addItemListener(e -> System.out.println(floorSelect.getSelectedIndex()));
         floorSelect.setFont(new Font("Helvetica", Font.BOLD, 20));
         positionPanel.add(floorSelect, c);
-        floorSelect.setVisible(false);
+//        floorSelect.setVisible(false);
 
 
         c = new GridBagConstraints();
@@ -158,19 +160,19 @@ public class OperatorView extends EccView {
         Panel modePanel = new Panel(new GridLayout());
 
         CheckboxGroup cbg = new CheckboxGroup();
-        Checkbox checkBox1 = new Checkbox("Aut", cbg, true);
+        checkBox1 = new Checkbox("Aut", cbg, true);
         checkBox1.setBounds(100, 100, 50, 50);
-        Checkbox checkBox2 = new Checkbox("Man", cbg, false);
+        checkBox2 = new Checkbox("Man", cbg, false);
         checkBox2.setBounds(100, 150, 50, 50);
 
-        checkBox1.addItemListener(e -> {
-            floorSelect.setVisible(false);
-            position.setVisible(true);
-        });
-        checkBox2.addItemListener(e -> {
-            position.setVisible(false);
-            floorSelect.setVisible(true);
-        });
+//        checkBox1.addItemListener(e -> {
+//            floorSelect.setVisible(false);
+//            position.setVisible(true);
+//        });
+//        checkBox2.addItemListener(e -> {
+//            position.setVisible(false);
+//            floorSelect.setVisible(true);
+//        });
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -198,19 +200,19 @@ public class OperatorView extends EccView {
         c.gridx = 0;
         c.gridy = 1;
         buttonUpPressed = new Label("_________");
-        callStopPanel.add(buttonUpPressed,c);
+        callStopPanel.add(buttonUpPressed, c);
         c.gridx = 0;
         c.gridy = 2;
         buttonDownPressed = new Label("_________");
-        callStopPanel.add(buttonDownPressed,c);
+        callStopPanel.add(buttonDownPressed, c);
         c.gridx = 0;
         c.gridy = 3;
         Label labelElevatorPanel = new Label("Pressed on Elevator panel:");
-        callStopPanel.add(labelElevatorPanel,c);
+        callStopPanel.add(labelElevatorPanel, c);
         c.gridx = 0;
         c.gridy = 4;
         elevatorPanelButtonsPressed = new Label("_________");
-        callStopPanel.add(elevatorPanelButtonsPressed,c);
+        callStopPanel.add(elevatorPanelButtonsPressed, c);
 
 //        c = new GridBagConstraints();
 //        int gridWeight = 0;
@@ -243,8 +245,15 @@ public class OperatorView extends EccView {
             int numOfFloors;
             ArrayList buttonUp = applicationState.buttonUpPressed;
             ArrayList buttonDown = applicationState.buttonDownPressed;
-
             if (infoPanel != null) {
+                floorSelect.setSize(50, 75);
+                if (checkBox1.getState()) {
+                    floorSelect.setVisible(false);
+                    position.setVisible(true);
+                } else {
+                    floorSelect.setVisible(true);
+                    position.setVisible(false);
+                }
                 if (floorSelect.getItemCount() == 0) {
                     numOfFloors = applicationState.numberOfFloors;
                     for (int i = 1; i <= numOfFloors; i++) {
@@ -253,23 +262,23 @@ public class OperatorView extends EccView {
                 }
 
                 StringBuilder builder = new StringBuilder();
-                for (int i =0;i < buttonDown.size();i++){
-                    builder.append((int)buttonDown.get(0));
+                for (int i = 0; i < buttonDown.size(); i++) {
+                    builder.append((int) buttonDown.get(0));
                     builder.append(" ");
                 }
 
                 doorStatus.setText(String.valueOf(applicationState.elevators.get(0).doorStatus));
                 speed.setText(String.valueOf(applicationState.elevators.get(0).currentSpeed));
                 payload.setText(String.valueOf(applicationState.elevators.get(0).currentPassengerWeight));
-                payload.setSize(100,50);
+                payload.setSize(100, 50);
                 target.setText(String.valueOf(applicationState.elevators.get(0).currentTarget));
                 position.setText(String.valueOf(applicationState.elevators.get(0).currentFloor));
                 buttonUpPressed.setText("UP: " + String.valueOf(applicationState.buttonUpPressed));
-                buttonUpPressed.setSize(500,35);
+                buttonUpPressed.setSize(500, 35);
                 buttonDownPressed.setText("DOWN: " + String.valueOf(applicationState.buttonDownPressed));
-                buttonDownPressed.setSize(500,35);
+                buttonDownPressed.setSize(500, 35);
                 elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(0).activeFloorButtons));
-                elevatorPanelButtonsPressed.setSize(500,35);
+                elevatorPanelButtonsPressed.setSize(500, 35);
 
 
 //                GridBagConstraints c = new GridBagConstraints();
