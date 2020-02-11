@@ -83,10 +83,12 @@ public class ApplicationModel extends EccModel {
 
     public void setManualElevatorTarget(int elevatorIndex, int target) throws RemoteException {
 
+        System.out.println("Called with target: " + target + ", index: " + elevatorIndex);
         if (applicationState.elevators.get(elevatorIndex).automatic) {
             // Not possible to set manual target in automatic mode
             return;
         }
+        System.out.println("Sent");
         Elevator elevator = applicationState.elevators.get(elevatorIndex);
         if (elevator.currentFloor > target) {
             elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_DOWN);
