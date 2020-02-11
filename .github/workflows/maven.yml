@@ -17,5 +17,6 @@ jobs:
       run: xvfb-run mvn -B verify --file pom.xml
     - name: Static analysis via SonarCloud
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: xvfb-run mvn -B sonar:sonar
