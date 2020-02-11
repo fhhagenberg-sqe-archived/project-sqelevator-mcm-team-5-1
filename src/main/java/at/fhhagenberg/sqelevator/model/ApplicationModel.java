@@ -100,7 +100,7 @@ public class ApplicationModel extends EccModel {
     public void manualOperationHelper(int elevatorIndex) throws RemoteException {
         Elevator elevator = applicationState.elevators.get(elevatorIndex);
 
-        if (elevator.currentSpeed == 0 && elevator.doorStatus == IElevator.ELEVATOR_DOORS_OPEN) {
+        if (elevator.currentFloor == elevator.currentTarget && elevator.currentSpeed == 0 && elevator.doorStatus == IElevator.ELEVATOR_DOORS_OPEN) {
             elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
         }
     }
