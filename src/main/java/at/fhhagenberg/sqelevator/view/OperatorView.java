@@ -28,6 +28,7 @@ public class OperatorView extends EccView {
     private Panel infoPanel;
     private Checkbox checkBox1;
     private Checkbox checkBox2;
+    private int elevatorIndex;
 
 
     @Override
@@ -45,7 +46,7 @@ public class OperatorView extends EccView {
         c.weightx = 1;
         selectedElevator = new Choice();
         selectedElevator.setSize(50, 75);
-        selectedElevator.addItemListener(e -> System.out.println(selectedElevator.getSelectedIndex())); //TODO set selected elevator
+        selectedElevator.addItemListener(e -> controller.setSelectedElevator(selectedElevator.getSelectedIndex()));
 
         infoPanel.add(selectedElevator, c);
 
@@ -137,7 +138,7 @@ public class OperatorView extends EccView {
         c.weightx = 1;
         floorSelect = new Choice();
         floorSelect.setSize(50, 75);
-        floorSelect.addItemListener(e -> System.out.println(floorSelect.getSelectedIndex())); // TODO select floor
+        floorSelect.addItemListener(e -> controller.setSelectedFloor(elevatorIndex, floorSelect.getSelectedIndex()));
         floorSelect.setFont(new Font("Helvetica", Font.BOLD, 20));
         positionPanel.add(floorSelect, c);
 
@@ -177,12 +178,12 @@ public class OperatorView extends EccView {
 
         checkBox1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                //TODO set automatic mode
+                controller.setAutomaticMode(elevatorIndex,true);
             }
         });
         checkBox2.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                //TODO set manual mode
+                controller.setAutomaticMode(elevatorIndex,false);
             }
         });
 
@@ -243,7 +244,7 @@ public class OperatorView extends EccView {
     @Override
     public void applicationStateChanged(ApplicationState applicationState) {
          System.out.println(applicationState.numberOfElevators);
-         int selectedEl = applicationState.selectedElevator;
+         elevatorIndex = applicationState.selectedElevator;
 
         if (applicationState.numberOfElevators > 0) {
             if (infoPanel != null) {
@@ -265,25 +266,27 @@ public class OperatorView extends EccView {
                     }
                 }
                 if (floorSelect.getItemCount() == 0) {
-                    for (int i = 1; i <= applicationState.numberOfFloors; i++) {
+                    for (int i = 0; i < applicationState.numberOfFloors; i++) {
                         floorSelect.add(String.valueOf(i));
                     }
                 }
 
-                doorStatus.setText(String.valueOf(applicationState.elevators.get(selectedEl).doorStatus));
-                speed.setText(String.valueOf(applicationState.elevators.get(selectedEl).currentSpeed));
-                payload.setText(String.valueOf(applicationState.elevators.get(selectedEl).currentPassengerWeight));
+                doorStatus.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).doorStatus));
+                speed.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentSpeed));
+                payload.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentPassengerWeight));
                 payload.setSize(100, 50);
-                target.setText(String.valueOf(applicationState.elevators.get(selectedEl).currentTarget));
-                position.setText(String.valueOf(applicationState.elevators.get(selectedEl).currentFloor));
+                target.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentTarget));
+                position.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentFloor));
                 buttonUpPressed.setText("UP: " + String.valueOf(applicationState.buttonUpPressed));
                 buttonUpPressed.setSize(500, 35);
                 buttonDownPressed.setText("DOWN: " + String.valueOf(applicationState.buttonDownPressed));
                 buttonDownPressed.setSize(500, 35);
-                elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(selectedEl).activeFloorButtons));
+                elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(elevatorIndex).activeFloorButtons));
                 elevatorPanelButtonsPressed.setSize(500, 35);
             }
-             System.out.println(applicationState.elevators.get(selectedEl).toString());
+            System.out.println(applicationState.elevators.get(elevatorIndex).toString());
+            System.out.println();
+            System.out.println(applicationState.elevators.get(elevatorIndex).automatic);
         }
     }
 }

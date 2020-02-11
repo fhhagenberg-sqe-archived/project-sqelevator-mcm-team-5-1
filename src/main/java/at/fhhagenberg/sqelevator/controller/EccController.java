@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.RemoteException;
 
 public class EccController extends WindowAdapter implements ActionListener {
 
@@ -77,4 +78,21 @@ public class EccController extends WindowAdapter implements ActionListener {
     public void windowDeactivated(WindowEvent e) {
 
     }
+
+    public void setSelectedFloor(int elevatorIndex ,int i){
+        try {
+            model.setManualElevatorTarget(elevatorIndex,i);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setAutomaticMode(int elevatorIndex, Boolean bool){
+        model.setElevatorAutomaticMode(elevatorIndex, bool);
+    }
+
+    public void setSelectedElevator(int elevatorIndex){
+        model.setSelectedElevator(elevatorIndex);
+    }
+
 }
