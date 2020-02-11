@@ -218,7 +218,7 @@ public class OperatorView extends EccView {
 
     @Override
     public void applicationStateChanged(ApplicationState applicationState) {
-//        System.out.println(applicationState.numberOfElevators);
+        // System.out.println(applicationState.numberOfElevators);
 
         if (applicationState.numberOfElevators > 0) {
             int numOfFloors;
@@ -251,7 +251,7 @@ public class OperatorView extends EccView {
                 elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(0).activeFloorButtons));
                 elevatorPanelButtonsPressed.setSize(500, 35);
             }
-//            System.out.println(applicationState.elevators.get(0).toString());
+            // System.out.println(applicationState.elevators.get(0).toString());
         }
     }
 }

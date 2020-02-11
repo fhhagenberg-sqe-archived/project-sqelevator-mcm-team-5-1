@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Elevator {
 
+    public boolean automatic = true;
+
     public int committedDirection;
 
     public int currentTarget;
