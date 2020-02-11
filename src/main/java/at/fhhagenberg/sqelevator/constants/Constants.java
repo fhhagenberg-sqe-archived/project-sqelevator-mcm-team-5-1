@@ -1,5 +1,8 @@
 package at.fhhagenberg.sqelevator.constants;
 
+/**
+ * Class that holds application-wide global constants.
+ */
 public class Constants {
 
     public static final String DEFAULT_WINDOW_TITLE = "Elevator Control Center";
