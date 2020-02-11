@@ -182,11 +182,13 @@ public class OperatorView extends EccView {
         checkBox1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 controller.setAutomaticMode(elevatorIndex, true);
+                floorSelect.select(floorIndex);
             }
         });
         checkBox2.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 controller.setAutomaticMode(elevatorIndex, false);
+                floorSelect.select(floorIndex);
             }
         });
 
