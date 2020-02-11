@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -16,3 +16,9 @@ jobs:
     - name: Build with Maven
 #       run: mvn sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       run: mvn -B package --file pom.xml
+    - name: Run SonarCloud
+        uses: sonarcloud/analyse
+        with:
+          projectKey: project-sqelevator-mcm-team-5-1
+          orgnization: fhhagenberg-sqe
+          hostUrl: https://sonarcloud.io
