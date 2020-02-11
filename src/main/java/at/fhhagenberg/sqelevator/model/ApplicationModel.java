@@ -71,16 +71,22 @@ public class ApplicationModel extends EccModel {
     public void setSelectedElevator(int elevatorIndex) {
         if (elevatorIndex >= 0 && elevatorIndex < applicationState.numberOfElevators) {
             applicationState.selectedElevator = elevatorIndex;
+            notifyObservers(applicationState);
         }
     }
 
     public void setElevatorAutomaticMode(int elevatorIndex, boolean automatic) {
         Elevator elevator = applicationState.elevators.get(elevatorIndex);
         elevator.automatic = automatic;
+        notifyObservers(applicationState);
     }
 
     public void setManualElevatorTarget(int elevatorIndex, int target) throws RemoteException {
 
+        if (applicationState.elevators.get(elevatorIndex).automatic) {
+            // Not possible to set manual target in automatic mode
+            return;
+        }
         Elevator elevator = applicationState.elevators.get(elevatorIndex);
         if (elevator.currentFloor > target) {
             elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_DOWN);
