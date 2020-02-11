@@ -4,6 +4,9 @@ import at.fhhagenberg.sqelevator.controller.EccController;
 import at.fhhagenberg.sqelevator.model.ApplicationState;
 
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 public class OperatorView extends EccView {
 
@@ -11,11 +14,24 @@ public class OperatorView extends EccView {
         super(controller, width, height);
     }
 
+    public int numOfFloors;
+    private Label payload;
+    private Label speed;
+    private Label doorStatus;
+    private Label target;
+    private Label up;
+    private Label down;
+    private Label position;
+    private TextField inputPosition;
+    private Choice floorSelect;
+    Panel callStopPanel;
+
+    private Panel floorPanel;
+
+
     @Override
     public void addComponents(Frame windowFrame) {
-
         windowFrame.setLayout(new GridLayout(1, 3));
-        ;
         windowFrame.setBackground(Color.lightGray);
 
         Panel infoPanel = new Panel();
@@ -31,7 +47,7 @@ public class OperatorView extends EccView {
 
         c.gridy = 1;
         c.anchor = GridBagConstraints.CENTER;
-        Label payload = new Label("__");
+        payload = new Label("_____");
         infoPanel.add(payload, c);
 
         c.gridy = 2;
@@ -41,7 +57,7 @@ public class OperatorView extends EccView {
 
         c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
-        Label speed = new Label("__");
+        speed = new Label("_____");
         infoPanel.add(speed, c);
 
         c.gridy = 4;
@@ -51,7 +67,7 @@ public class OperatorView extends EccView {
 
         c.gridy = 5;
         c.anchor = GridBagConstraints.CENTER;
-        Label doorStatus = new Label("__");
+        doorStatus = new Label("_____");
         infoPanel.add(doorStatus, c);
 
         c.gridy = 6;
@@ -61,14 +77,11 @@ public class OperatorView extends EccView {
 
         c.gridy = 7;
         c.anchor = GridBagConstraints.CENTER;
-        Label target = new Label("__");
+        target = new Label("_____");
         infoPanel.add(target, c);
 
         Font myFont = new Font("Helvetica", Font.PLAIN, 30);
-        labelPayload.setFont(myFont);
-        labelSpeed.setFont(myFont);
-        labelDoorStatus.setFont(myFont);
-        labelTarget.setFont(myFont);
+        infoPanel.setFont(myFont);
 
         Panel positionPanel = new Panel();
         positionPanel.setLayout(new GridBagLayout());
@@ -85,7 +98,7 @@ public class OperatorView extends EccView {
         c.gridy = 1;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        Label up = new Label("UP");
+        up = new Label("UP");
         up.setFont(new Font("Helvetica", Font.BOLD, 45));
         positionPanel.add(up, c);
 
@@ -101,9 +114,27 @@ public class OperatorView extends EccView {
         c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        Label position = new Label("POS");
+        position = new Label("PO");
         position.setFont(new Font("Helvetica", Font.BOLD, 35));
         positionPanel.add(position, c);
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.CENTER;
+        c.weightx = 1;
+        floorSelect = new Choice();
+        floorSelect.setSize(100, 75);
+        floorSelect.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                System.out.println(floorSelect.getSelectedIndex());
+            }
+        });
+        floorSelect.setFont(new Font("Helvetica", Font.BOLD, 20));
+        positionPanel.add(floorSelect, c);
+        floorSelect.setVisible(false);
+
 
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -117,7 +148,7 @@ public class OperatorView extends EccView {
         c.gridy = 5;
         c.anchor = GridBagConstraints.CENTER;
         c.weightx = 1;
-        Label down = new Label("DOWN");
+        down = new Label("DOWN");
         down.setFont(new Font("Helvetica", Font.BOLD, 45));
         positionPanel.add(down, c);
 
@@ -128,116 +159,51 @@ public class OperatorView extends EccView {
         c.fill = GridBagConstraints.HORIZONTAL;
         positionPanel.add(new Panel(), c);
 
-        Panel floorPanel = new Panel();
+        floorPanel = new Panel();
         floorPanel.setLayout(new GridBagLayout());
 
+        Panel modePanel = new Panel(new GridLayout());
+
         CheckboxGroup cbg = new CheckboxGroup();
-        Checkbox checkBox1 = new Checkbox("Automatic", cbg, true);
+        Checkbox checkBox1 = new Checkbox("Aut", cbg, true);
         checkBox1.setBounds(100, 100, 50, 50);
-        Checkbox checkBox2 = new Checkbox("Manual", cbg, false);
+        Checkbox checkBox2 = new Checkbox("Man", cbg, false);
         checkBox2.setBounds(100, 150, 50, 50);
 
+        checkBox1.addItemListener(e -> {
+            floorSelect.setVisible(false);
+            position.setVisible(true);
+        });
+        checkBox2.addItemListener(e -> {
+            position.setVisible(false);
+            floorSelect.setVisible(true);
+        });
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
         c.weighty = 1;
-        c.fill = GridBagConstraints.EAST;
+        c.fill = GridBagConstraints.CENTER;
         Label labelMode = new Label("Mode:");
-        floorPanel.add(labelMode);
+        modePanel.add(labelMode);
 
-        floorPanel.add(checkBox1);
-        floorPanel.add(checkBox2);
+        modePanel.add(checkBox1);
+        modePanel.add(checkBox2);
 
+        floorPanel.add(modePanel, c);
         floorPanel.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
-        Panel callStopPanel = new Panel();
+        callStopPanel = new Panel();
         callStopPanel.setLayout(new GridBagLayout());
 
-        Label testFloor10 = new Label("10");
-        Label testFloor9 = new Label("9");
-        Label testFloor8 = new Label("8");
-        Label testFloor7 = new Label("7");
-        Label testFloor6 = new Label("6");
-        Label testFloor5 = new Label("5");
-        Label testFloor4 = new Label("4");
-        Label testFloor3 = new Label("3");
-        Label testFloor2 = new Label("2");
-        Label testFloor1 = new Label("1");
-
-        Checkbox labelFloor10 = new Checkbox("", false);
-        Checkbox labelFloor9 = new Checkbox("", false);
-        Checkbox labelFloor8 = new Checkbox("", false);
-        Checkbox labelFloor7 = new Checkbox("", false);
-        Checkbox labelFloor6 = new Checkbox("", false);
-        Checkbox labelFloor5 = new Checkbox("", false);
-        Checkbox labelFloor4 = new Checkbox("", false);
-        Checkbox labelFloor3 = new Checkbox("", false);
-        Checkbox labelFloor2 = new Checkbox("", false);
-        Checkbox labelFloor1 = new Checkbox("", false);
-
         c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weighty = 1;
-        c.fill = GridBagConstraints.EAST;
-        callStopPanel.add(testFloor10, c);
-        c.gridx = 1;
-        c.gridy = 0;
-        callStopPanel.add(labelFloor10, c);
-        c.gridx = 0;
-        c.gridy = 1;
-        callStopPanel.add(testFloor9, c);
-        c.gridx = 1;
-        c.gridy = 1;
-        callStopPanel.add(labelFloor9, c);
-        c.gridx = 0;
-        c.gridy = 2;
-        callStopPanel.add(testFloor8, c);
-        c.gridx = 1;
-        c.gridy = 2;
-        callStopPanel.add(labelFloor8, c);
-        c.gridx = 0;
-        c.gridy = 3;
-        callStopPanel.add(testFloor7, c);
-        c.gridx = 1;
-        c.gridy = 3;
-        callStopPanel.add(labelFloor7, c);
-        c.gridx = 0;
-        c.gridy = 4;
-        callStopPanel.add(testFloor6, c);
-        c.gridx = 1;
-        c.gridy = 4;
-        callStopPanel.add(labelFloor6, c);
-        c.gridx = 0;
-        c.gridy = 5;
-        callStopPanel.add(testFloor5, c);
-        c.gridx = 1;
-        c.gridy = 5;
-        callStopPanel.add(labelFloor5, c);
-        c.gridx = 0;
-        c.gridy = 6;
-        callStopPanel.add(testFloor4, c);
-        c.gridx = 1;
-        c.gridy = 6;
-        callStopPanel.add(labelFloor4, c);
-        c.gridx = 0;
-        c.gridy = 7;
-        callStopPanel.add(testFloor3, c);
-        c.gridx = 1;
-        c.gridy = 7;
-        callStopPanel.add(labelFloor3, c);
-        c.gridx = 0;
-        c.gridy = 8;
-        callStopPanel.add(testFloor2, c);
-        c.gridx = 1;
-        c.gridy = 8;
-        callStopPanel.add(labelFloor2, c);
-        c.gridx = 0;
-        c.gridy = 9;
-        callStopPanel.add(testFloor1, c);
-        c.gridx = 1;
-        c.gridy = 9;
-        callStopPanel.add(labelFloor1, c);
+        int gridWeight = 0;
+
+        for (int i = numOfFloors; i >= 1; i--) {
+            c.gridy = gridWeight;
+            callStopPanel.add(new Label(), c);
+
+        }
 
         callStopPanel.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
@@ -258,6 +224,51 @@ public class OperatorView extends EccView {
         System.out.println(applicationState.numberOfElevators);
 
         if (applicationState.numberOfElevators > 0) {
+            numOfFloors = applicationState.numberOfFloors;
+            ArrayList buttonDownList = applicationState.buttonDownPressed;
+            ArrayList buttonUpList = applicationState.buttonUpPressed;
+
+            if (floorSelect != null) {
+                if (floorSelect.getItemCount() == 0) {
+                    numOfFloors = applicationState.numberOfFloors;
+                    for (int i = 1; i <= numOfFloors; i++) {
+                        floorSelect.add(String.valueOf(i));
+                    }
+                }
+                doorStatus.setText(String.valueOf(applicationState.elevators.get(0).doorStatus));
+                speed.setText(String.valueOf(applicationState.elevators.get(0).currentSpeed));
+                payload.setText(String.valueOf(applicationState.elevators.get(0).currentPassengerWeight));
+                target.setText(String.valueOf(applicationState.elevators.get(0).committedDirection));
+                position.setText(String.valueOf(applicationState.elevators.get(0).currentFloor));
+
+                GridBagConstraints c = new GridBagConstraints();
+                int gridWeight = 0;
+
+                for (int i = numOfFloors; i >= 1; i--) {
+                    c.gridx = 0;
+                    c.gridy = gridWeight;
+                    callStopPanel.add(new Label(String.valueOf(i)), c);
+                    c.gridx = 1;
+                    c.gridy = gridWeight;
+                    if(buttonUpList.contains(i-1)){
+                        callStopPanel.add(new Label("U:X"), c);
+                    }else {
+                        callStopPanel.add(new Label("U: "), c);
+                    }
+                    c.gridx = 2;
+                    c.gridy = gridWeight;
+                    if(buttonDownList.contains(i-1)){
+                        callStopPanel.add(new Label("D:X"), c);
+                    }else {
+                        callStopPanel.add(new Label("D: "), c);
+                    }
+//                    c.gridx = 3;
+//                    c.gridy = gridWeight;
+//                    callStopPanel.add(new Label("P: "), c);
+
+                    gridWeight++;
+                }
+            }
             System.out.println(applicationState.elevators.get(0).toString());
         }
     }

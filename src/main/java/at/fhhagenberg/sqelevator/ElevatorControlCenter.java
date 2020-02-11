@@ -11,12 +11,13 @@ public class ElevatorControlCenter {
     public static void main(String[] args) {
 
         ApplicationModel model = new ApplicationModel();
+
         EccController controller = new EccController(model);
         EccView view = new OperatorView(controller, Constants.DEFAULT_WINDOW_WIDTH, Constants.DEFAULT_WINDOW_HEIGHT);
 
         model.addObserver(view);
-        view.open();
         controller.initApplication();
+        view.open();
     }
 
 }
