@@ -308,9 +308,25 @@ public class OperatorView extends EccView {
                 buttonDownPressed.setSize(500, 35);
                 elevatorPanelButtonsPressed.setText("Floor: " + String.valueOf(applicationState.elevators.get(elevatorIndex).activeFloorButtons));
                 elevatorPanelButtonsPressed.setSize(500, 35);
+//                System.out.println(applicationState.elevators.get(elevatorIndex).committedDirection);
+                switch (applicationState.elevators.get(elevatorIndex).committedDirection) {
+                    case 0:
+                        down.setBackground(Color.lightGray);
+                        up.setBackground(Color.GREEN);
+                        break;
+                    case 1:
+                        down.setBackground(Color.GREEN);
+                        up.setBackground(Color.lightGray);
+                        break;
+                    case 2:
+                        down.setBackground(Color.lightGray);
+                        up.setBackground(Color.LIGHT_GRAY);
+                        break;
+                    default:
+                }
             }
 //            System.out.println(applicationState.elevators.get(elevatorIndex).toString());
-        }else {
+        } else {
             selectedElevator.setVisible(false);
         }
     }
