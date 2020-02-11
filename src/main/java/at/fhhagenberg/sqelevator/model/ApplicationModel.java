@@ -56,7 +56,11 @@ public class ApplicationModel extends EccModel {
             }
 
             for (int i = 0; i < applicationState.numberOfElevators; i++) {
-                autoOperateElevator(i);
+                if (applicationState.elevators.get(i).automatic) {
+                    autoOperateElevator(i);
+                } else {
+                    manualOperationHelper(i);
+                }
             }
             notifyObservers(applicationState);
         } catch (Exception e) {
@@ -80,8 +84,18 @@ public class ApplicationModel extends EccModel {
         Elevator elevator = applicationState.elevators.get(elevatorIndex);
         if (elevator.currentFloor > target) {
             elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_DOWN);
+            elevatorControl.setTarget(elevatorIndex, target);
         } else if (elevator.currentFloor < target) {
             elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_UP);
+            elevatorControl.setTarget(elevatorIndex, target);
+        }
+    }
+
+    public void manualOperationHelper(int elevatorIndex) throws RemoteException {
+        Elevator elevator = applicationState.elevators.get(elevatorIndex);
+
+        if (elevator.currentSpeed == 0 && elevator.doorStatus == IElevator.ELEVATOR_DOORS_OPEN) {
+            elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_UNCOMMITTED);
         }
     }
 
