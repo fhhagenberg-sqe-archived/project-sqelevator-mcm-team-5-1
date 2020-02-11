@@ -32,12 +32,11 @@ public class ApplicationModel extends EccModel {
             if (applicationState.numberOfElevators > 0) {
                 applicationState.selectedElevator = 0;
             }
-        } catch (Exception e) {
-            // TODO: Handle exception
-            e.printStackTrace();
-        }
 
-        update();
+            update();
+        } catch (Exception e) {
+            // Do nothing here - this occurs if simulation isnt started yet.
+        }
     }
 
     /**
@@ -64,7 +63,8 @@ public class ApplicationModel extends EccModel {
             }
             notifyObservers(applicationState);
         } catch (Exception e) {
-            e.printStackTrace();
+            // This occurs when simulation isn't started yet - try to connect again
+            initApplication();
         }
     }
 
