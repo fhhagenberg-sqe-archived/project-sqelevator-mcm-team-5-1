@@ -2,8 +2,14 @@ package at.fhhagenberg.sqelevator.model;
 
 import java.util.ArrayList;
 
+/**
+ * Class that represents the state of the building that is managed by the ECC application.
+ */
 public class ApplicationState {
 
+    /**
+     * Default constructor initializing the arrays.
+     */
     public ApplicationState() {
         this.buttonUpPressed = new ArrayList<>();
         this.buttonDownPressed = new ArrayList<>();

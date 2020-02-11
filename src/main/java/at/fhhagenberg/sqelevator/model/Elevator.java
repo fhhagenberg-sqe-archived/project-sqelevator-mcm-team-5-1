@@ -2,8 +2,14 @@ package at.fhhagenberg.sqelevator.model;
 
 import java.util.ArrayList;
 
+/**
+ * Class that represents the state of one elevator within the managed building.
+ */
 public class Elevator {
 
+    /**
+     * Default constructor initializing some fields with default values.
+     */
     public Elevator() {
         this.automatic = true;
         this.activeFloorButtons = new ArrayList<>();

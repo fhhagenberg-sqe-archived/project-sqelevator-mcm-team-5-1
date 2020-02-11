@@ -6,14 +6,26 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+/**
+ * Concrete model class of the application. Holds the application state and data, the application logic, and is
+ * responsible for the network communication via RMI with the elevator.
+ */
 public class ApplicationModel extends EccModel {
 
     protected IElevator elevatorControl = null;
 
+    /**
+     * Default constructor
+     */
     public ApplicationModel() {
         super();
     }
 
+    /**
+     * Initializes the application. Builds a connection with the elevator RMI and fetches the static information about
+     * the building. Sets up the control data and values for use, and finally performs the first update of the dynamic
+     * elevator data.
+     */
     public void initApplication() {
 
         try {
@@ -40,8 +52,8 @@ public class ApplicationModel extends EccModel {
     }
 
     /**
-     * Updates all changing data. To be called regularly.
-     * @throws RemoteException
+     * Updates all changing data. To be called regularly by the controller to update the current elevator status.
+     * @throws RemoteException When no connection to the RMI interface could be established.
      */
     public void update() {
 
@@ -68,6 +80,10 @@ public class ApplicationModel extends EccModel {
         }
     }
 
+    /**
+     * Sets the currently selected elevator, the data of which is displayed in the view.
+     * @param elevatorIndex The index of the elevator to select.
+     */
     public void setSelectedElevator(int elevatorIndex) {
         if (elevatorIndex >= 0 && elevatorIndex < applicationState.getNumberOfElevators()) {
             applicationState.setSelectedElevator(elevatorIndex);
@@ -75,6 +91,11 @@ public class ApplicationModel extends EccModel {
         }
     }
 
+    /**
+     * Sets the mode of the elevator, between manual operation and automatic operation.
+     * @param elevatorIndex The index of the elevator of which the mode should be set.
+     * @param automatic True for automatic, false for manual control.
+     */
     public void setElevatorAutomaticMode(int elevatorIndex, boolean automatic) {
         if (elevatorIndex < 0 || elevatorIndex >= applicationState.getNumberOfElevators()) {
             // not a valid index
@@ -85,6 +106,12 @@ public class ApplicationModel extends EccModel {
         notifyObservers(applicationState);
     }
 
+    /**
+     * Sets the target of the specified elevator manually and communicates it to the RMI.
+     * @param elevatorIndex The index of the elevator to control.
+     * @param target The target floor to send the elevator to.
+     * @throws RemoteException
+     */
     public void setManualElevatorTarget(int elevatorIndex, int target) throws RemoteException {
 
         if (applicationState.getElevators().get(elevatorIndex).isAutomatic()) {
@@ -106,6 +133,11 @@ public class ApplicationModel extends EccModel {
         }
     }
 
+    /**
+     * Checks if the elevator is standing still and, if so, sets its direction to uncommitted.
+     * @param elevatorIndex The index of the controlled elevator.
+     * @throws RemoteException Thrown if the communication with the RMI interface fails.
+     */
     public void manualOperationHelper(int elevatorIndex) throws RemoteException {
         Elevator elevator = applicationState.getElevators().get(elevatorIndex);
 
@@ -114,6 +146,12 @@ public class ApplicationModel extends EccModel {
         }
     }
 
+    /**
+     * Gets the status of the specified elevator and auto-operates it to service the building. At the moment, the
+     * the elevator goes up and down while stopping on each floor.
+     * @param elevatorIndex The index of the elevator to control.
+     * @throws RemoteException Thrown if the communication with the RMI interface fails.
+     */
     public void autoOperateElevator(int elevatorIndex) throws RemoteException {
 
         Elevator elevator = applicationState.getElevators().get(elevatorIndex);
@@ -146,6 +184,7 @@ public class ApplicationModel extends EccModel {
                 break;
             }
             case IElevator.ELEVATOR_DIRECTION_UNCOMMITTED: {
+
                 if (elevator.getCurrentFloor() < applicationState.getNumberOfFloors() - 1) {
                     elevatorControl.setCommittedDirection(elevatorIndex, IElevator.ELEVATOR_DIRECTION_UP);
                 } else {
@@ -159,6 +198,11 @@ public class ApplicationModel extends EccModel {
         }
     }
 
+    /**
+     * Updates the lists that hold the requests to go up or down of each floor. Called with every update.
+     * @param numberOfFloors The number of floors. Needed to query the RMI interface.
+     * @throws RemoteException Thrown when no connection to the RMI interface can be established.
+     */
     public void updateUpDownRequestLists(int numberOfFloors) throws RemoteException {
 
         ArrayList<Integer> buttonUpPressed = new ArrayList<>();
@@ -181,6 +225,12 @@ public class ApplicationModel extends EccModel {
         applicationState.setButtonDownPressed(buttonDownPressed);
     }
 
+    /**
+     * Updates the dynamic data of the specified elevator. The update is done in place without creating a new object.
+     * @param elevatorIndex The index of the elevator to update.
+     * @param numberOfFloors The number of floors of the building. Necessary to query the elevators button panel.
+     * @throws RemoteException Thrown when no connection to the RMI interface can be established.
+     */
     public void updateElevatorData(int elevatorIndex, int numberOfFloors) throws RemoteException {
 
         Elevator result = applicationState.getElevators().get(elevatorIndex);
