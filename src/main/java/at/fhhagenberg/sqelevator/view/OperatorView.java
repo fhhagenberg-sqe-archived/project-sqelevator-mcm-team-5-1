@@ -249,13 +249,19 @@ public class OperatorView extends EccView {
         if (applicationState.numberOfElevators > 0) {
             if (infoPanel != null) {
                 floorSelect.setSize(50, 75);
-                if (checkBox1.getState()) {
+
+                if (applicationState.elevators.get(elevatorIndex).automatic){
+                    checkBox1.setState(true);
+                    checkBox2.setState(false);
                     floorSelect.setVisible(false);
                     position.setVisible(true);
-                } else {
+                }else {
+                    checkBox1.setState(false);
+                    checkBox2.setState(true);
                     floorSelect.setVisible(true);
                     position.setVisible(false);
                 }
+                
                 if (applicationState.numberOfElevators == 1){
                     selectedElevator.setVisible(false);
                 }else {
