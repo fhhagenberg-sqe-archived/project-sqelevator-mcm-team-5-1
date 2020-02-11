@@ -31,7 +31,6 @@ public class OperatorView extends EccView {
     private int elevatorIndex;
     private int floorIndex;
 
-
     @Override
     public void addComponents(Frame windowFrame) {
         windowFrame.setLayout(new GridLayout(1, 3));
@@ -51,8 +50,8 @@ public class OperatorView extends EccView {
             controller.setSelectedElevator(selectedElevator.getSelectedIndex());
             floorSelect.select(floorIndex);
         });
-
         infoPanel.add(selectedElevator, c);
+        selectedElevator.setVisible(false);
 
         c.gridx = 0;
         c.gridy = 1;
@@ -63,7 +62,8 @@ public class OperatorView extends EccView {
 
         c.gridy = 2;
         c.anchor = GridBagConstraints.CENTER;
-        payload = new Label("12345");
+        payload = new Label("____");
+//        payload.setSize(100, 50);
         infoPanel.add(payload, c);
 
         c.gridy = 3;
@@ -73,7 +73,8 @@ public class OperatorView extends EccView {
 
         c.gridy = 4;
         c.anchor = GridBagConstraints.CENTER;
-        speed = new Label("123");
+        speed = new Label("__");
+//        speed.setSize(100, 50);
         infoPanel.add(speed, c);
 
         c.gridy = 5;
@@ -83,7 +84,8 @@ public class OperatorView extends EccView {
 
         c.gridy = 6;
         c.anchor = GridBagConstraints.CENTER;
-        doorStatus = new Label("");
+        doorStatus = new Label("__");
+//        doorStatus.setSize(100, 50);
         infoPanel.add(doorStatus, c);
 
         c.gridy = 7;
@@ -93,7 +95,8 @@ public class OperatorView extends EccView {
 
         c.gridy = 8;
         c.anchor = GridBagConstraints.CENTER;
-        target = new Label("");
+        target = new Label("__");
+//        target.setSize(100, 50);
         infoPanel.add(target, c);
 
         Font myFont = new Font("Helvetica", Font.PLAIN, 30);
@@ -252,6 +255,7 @@ public class OperatorView extends EccView {
         elevatorIndex = applicationState.selectedElevator;
         floorIndex = applicationState.elevators.get(elevatorIndex).currentFloor;
 
+
         if (applicationState.numberOfElevators > 0) {
             if (infoPanel != null) {
                 floorSelect.setSize(50, 75);
@@ -269,6 +273,7 @@ public class OperatorView extends EccView {
                 if (applicationState.numberOfElevators == 1) {
                     selectedElevator.setVisible(false);
                 } else {
+                    selectedElevator.setVisible(true);
                     if (selectedElevator.getItemCount() == 0) {
                         for (int i = 0; i < applicationState.numberOfElevators; i++) {
                             selectedElevator.add(String.valueOf(i));
@@ -282,12 +287,16 @@ public class OperatorView extends EccView {
 
                 }
 
+                selectedElevator.setSize(50, 50);
+
                 doorStatus.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).doorStatus));
                 speed.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentSpeed));
                 payload.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentPassengerWeight));
-                payload.setSize(100, 50);
+                payload.setSize(100, 35);
                 target.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentTarget));
+                target.setSize(100, 35);
                 position.setText(String.valueOf(applicationState.elevators.get(elevatorIndex).currentFloor));
+                position.setSize(100, 35);
                 buttonUpPressed.setText("UP: " + String.valueOf(applicationState.buttonUpPressed));
                 buttonUpPressed.setSize(500, 35);
                 buttonDownPressed.setText("DOWN: " + String.valueOf(applicationState.buttonDownPressed));
@@ -296,6 +305,8 @@ public class OperatorView extends EccView {
                 elevatorPanelButtonsPressed.setSize(500, 35);
             }
 //            System.out.println(applicationState.elevators.get(elevatorIndex).toString());
+        }else {
+            selectedElevator.setVisible(false);
         }
     }
 }
