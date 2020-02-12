@@ -13,8 +13,7 @@ import java.rmi.RemoteException;
 @ExtendWith(MockitoExtension.class)
 public class EccControllerTest {
 
-    @Mock
-    public ApplicationModel model = new ApplicationModel();
+    public ApplicationModel model = Mockito.mock(ApplicationModel.class);
 
     @Test
     public void testSetSelectedFloor() {
@@ -25,6 +24,16 @@ public class EccControllerTest {
 
         try {
             Mockito.verify(model, Mockito.times(1)).setManualElevatorTarget(Mockito.eq(1), Mockito.eq(1));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        Mockito.reset(model);
+
+        controller.setSelectedFloor(0, 3);
+
+        try {
+            Mockito.verify(model, Mockito.times(1)).setManualElevatorTarget(Mockito.eq(0), Mockito.eq(3));
         } catch (RemoteException e) {
             e.printStackTrace();
         }
